@@ -348,6 +348,7 @@ public class MapGraph {
 		while (!toExplore.isEmpty()) {
 			
 			next = toExplore.remove();
+			nodeSearched.accept(next.getLocation());
 			count++;
 			if(next.equals(endNode)) break;
 			
@@ -428,6 +429,7 @@ public class MapGraph {
 				while (!toExplore.isEmpty()) {
 				
 					next = toExplore.remove();
+					nodeSearched.accept(next.getLocation());
 					count++;
 					
 					if(next.equals(endNode)) break;

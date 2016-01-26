@@ -85,7 +85,7 @@ public class MapApp extends Application
     // create components for fetch tab
     Button fetchButton = new Button("Fetch Data");
     Button displayButton = new Button("Show Intersections");
-    TextField tf = new TextField();
+   
     ComboBox<DataSet> cb = new ComboBox<DataSet>();
 
     // set on mouse pressed, this fixes Windows 10 / Surface bug
@@ -93,7 +93,7 @@ public class MapApp extends Application
     	cb.requestFocus();
     });
 
-    HBox fetchControls = getBottomBox(tf, fetchButton);
+    
 
     VBox fetchBox = getFetchBox(displayButton, cb);
 
@@ -108,8 +108,8 @@ public class MapApp extends Application
     CLabel<geography.GeographicPoint> startLabel = new CLabel<geography.GeographicPoint>("Empty.", new ImageView(sImage), null);
     CLabel<geography.GeographicPoint> endLabel = new CLabel<geography.GeographicPoint>("Empty.", new ImageView(dImage), null);
     //TODO -- hot fix
-    startLabel.setMinWidth(180);
-    endLabel.setMinWidth(180);
+    startLabel.autosize();
+    endLabel.autosize();
 //        startLabel.setWrapText(true);
 //        endLabel.setWrapText(true);
     Button startButton = new Button("Start");
@@ -149,12 +149,12 @@ public class MapApp extends Application
         // initialize controllers
 				new RouteController(rs, routeButton, hideRouteButton, resetButton, startButton, destinationButton, group, searchOptions, visualizationButton,
 															  startLabel, endLabel, pointLabel, manager, markerManager);
-        new FetchController(gs, rs, tf, fetchButton, cb, displayButton);
+        new FetchController(gs, rs);
     });
 
 		// add components to border pane
 		bp.setRight(tp);
-    bp.setBottom(fetchControls);
+   
 		bp.setCenter(mapComponent);
 
 		Scene scene = new Scene(bp);
@@ -195,16 +195,6 @@ public class MapApp extends Application
 	}
 
 
-	// SETTING UP THE VIEW
-
-  private HBox getBottomBox(TextField tf, Button fetchButton) {
-    HBox box = new HBox();
-    tf.setPrefWidth(FETCH_COMPONENT_WIDTH);
-    box.getChildren().add(tf);
-    fetchButton.setPrefWidth(FETCH_COMPONENT_WIDTH);
-    box.getChildren().add(fetchButton);
-    return box;
-  }
 	/**
 	 * Setup layout and controls for Fetch tab
 	 * @param fetchTab
@@ -244,7 +234,7 @@ public class MapApp extends Application
   						   Button showButton, Button hideButton, Button resetButton, Button vButton, Button startButton,
   						   Button destButton, List<RadioButton> searchOptions) {
 
-		//set up tab layout
+		/*//set up tab layout
 	    HBox h = new HBox();
 		// v is inner container
       VBox v = new VBox();
@@ -301,7 +291,7 @@ public class MapApp extends Application
       //v.getChildren().add(resetButton);
 
 
-      routeTab.setContent(h);
+      routeTab.setContent(h);*/
 
 
   }
