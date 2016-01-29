@@ -66,6 +66,10 @@ public class MarkerOptions extends JavascriptObject {
         return this;
     }
     
+    public LatLong getPosition(){
+    	return position;
+    }
+    
     
     
 }

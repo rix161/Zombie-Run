@@ -83,6 +83,10 @@ public class MarkerManager {
     	markerMap.put(key, value);
 
     }
+    
+    public void updatePawn(Marker marker){
+    	this.map.addMarker(marker);
+    }
 
     /** Used to initialize new RouteVisualization object
      *
@@ -219,6 +223,8 @@ public class MarkerManager {
         	MarkerOptions markerOptions = createDefaultOptions(ll);
             bounds.extend(ll);
         	Marker marker = new Marker(markerOptions);
+        	/*if(dataSet.checkInSafeHouse(point))
+        		marker.setIcon(visURL);*/
             registerEvents(marker, point);
         	map.addMarker(marker);
         	putMarker(point, marker);
@@ -256,7 +262,7 @@ public class MarkerManager {
 
                 // re add markers to map
                 // slightly glitchy
-//                refreshMarkers();
+                refreshMarkers();
             }
         });
     }

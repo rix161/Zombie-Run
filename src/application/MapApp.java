@@ -8,6 +8,8 @@
 package application;
 
 import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -27,13 +29,16 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.scene.web.*;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -80,76 +85,45 @@ public class MapApp extends Application
 		mapComponent.addMapInitializedListener(this);
 
 		// initialize tabs for data fetching and route controls
-    Tab routeTab = new Tab("Routing");
+		
+	
+    Tab routeTab = new Tab("Control Box");
 
-    // create components for fetch tab
-    Button fetchButton = new Button("Fetch Data");
-    Button displayButton = new Button("Show Intersections");
-   
-    ComboBox<DataSet> cb = new ComboBox<DataSet>();
-
-    // set on mouse pressed, this fixes Windows 10 / Surface bug
-    cb.setOnMousePressed( e -> {
-    	cb.requestFocus();
-    });
-
+    Text PizzaStash = new Text("0");
+    PizzaStash.setFont(Font.font("Arial",FontWeight.BOLD,20));
+    PizzaStash.setFill(Paint.valueOf("Black"));
     
-
-    VBox fetchBox = getFetchBox(displayButton, cb);
-
-
-    // create components for fetch tab
-    Button routeButton = new Button("Show Route");
-    Button hideRouteButton = new Button("Hide Route");
-    Button resetButton = new Button("Reset");
-    Button visualizationButton = new Button("Start Visualization");
-    Image sImage = new Image(MarkerManager.startURL);
-    Image dImage = new Image(MarkerManager.destinationURL);
-    CLabel<geography.GeographicPoint> startLabel = new CLabel<geography.GeographicPoint>("Empty.", new ImageView(sImage), null);
-    CLabel<geography.GeographicPoint> endLabel = new CLabel<geography.GeographicPoint>("Empty.", new ImageView(dImage), null);
-    //TODO -- hot fix
-    startLabel.autosize();
-    endLabel.autosize();
-//        startLabel.setWrapText(true);
-//        endLabel.setWrapText(true);
-    Button startButton = new Button("Start");
-    Button destinationButton = new Button("Dest");
-
-    // Radio buttons for selecting search algorithm
-    final ToggleGroup group = new ToggleGroup();
-
-    List<RadioButton> searchOptions = setupToggle(group);
-
-
+    Button nextTurn = new Button("Finish Day");
     // Select and marker managers for route choosing and marker display/visuals
     // should only be one instance (singleton)
     SelectManager manager = new SelectManager();
     MarkerManager markerManager = new MarkerManager();
     markerManager.setSelectManager(manager);
     manager.setMarkerManager(markerManager);
-    markerManager.setVisButton(visualizationButton);
-
+    
+    MasterControl myControl = new MasterControl(manager,markerManager,PizzaStash);
+    
+    
     // create components for route tab
     CLabel<geography.GeographicPoint> pointLabel = new CLabel<geography.GeographicPoint>("No point Selected.", null);
     manager.setPointLabel(pointLabel);
-    manager.setStartLabel(startLabel);
-    manager.setDestinationLabel(endLabel);
-    setupRouteTab(routeTab, fetchBox, startLabel, endLabel, pointLabel, routeButton, hideRouteButton,
-        		  resetButton, visualizationButton, startButton, destinationButton, searchOptions);
+    setupRouteTab(routeTab,PizzaStash,nextTurn);
 
         // add tabs to pane, give no option to close
-		TabPane tp = new TabPane(routeTab);
+	TabPane tp = new TabPane(routeTab);
     tp.setTabClosingPolicy(TabPane.TabClosingPolicy.UNAVAILABLE);
 
     // initialize Services and controllers after map is loaded
     mapComponent.addMapReadyListener(() -> {
-        GeneralService gs = new GeneralService(mapComponent, manager, markerManager);
-        RouteService rs = new RouteService(mapComponent, markerManager);
-        //System.out.println("in map ready : " + this.getClass());
-        // initialize controllers
-				new RouteController(rs, routeButton, hideRouteButton, resetButton, startButton, destinationButton, group, searchOptions, visualizationButton,
-															  startLabel, endLabel, pointLabel, manager, markerManager);
-        new FetchController(gs, rs);
+        GeneralService gs = new GeneralService(mapComponent, myControl.getSelectManager(), myControl.getMarkerManager());
+        myControl.SetMap();
+        nextTurn.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				myControl.updateState();
+			}
+		});
     });
 
 		// add components to border pane
@@ -158,7 +132,7 @@ public class MapApp extends Application
 		bp.setCenter(mapComponent);
 
 		Scene scene = new Scene(bp);
-    scene.getStylesheets().add("html/routing.css");
+		scene.getStylesheets().add("html/routing.css");
 		primaryStage.setScene(scene);
 		primaryStage.show();
 
@@ -195,105 +169,37 @@ public class MapApp extends Application
 	}
 
 
-	/**
-	 * Setup layout and controls for Fetch tab
-	 * @param fetchTab
-	 * @param fetchButton
-	 * @param displayButton
-	 * @param tf
-	 */
-  private VBox getFetchBox(Button displayButton, ComboBox<DataSet> cb) {
-  	// add button to tab, rethink design and add V/HBox for content
-  	VBox v = new VBox();
-    HBox h = new HBox();
-
-
-
-    HBox intersectionControls = new HBox();
-//        cb.setMinWidth(displayButton.getWidth());
-    cb.setPrefWidth(FETCH_COMPONENT_WIDTH);
-    intersectionControls.getChildren().add(cb);
-    displayButton.setPrefWidth(FETCH_COMPONENT_WIDTH);
-    intersectionControls.getChildren().add(displayButton);
-
-    h.getChildren().add(v);
-    v.getChildren().add(new Label("Choose map file : "));
-    v.getChildren().add(intersectionControls);
-
-    //v.setSpacing(MARGIN_VAL);
-    return v;
-  }
-
   /**
    * Setup layout of route tab and controls
    *
    * @param routeTab
    * @param box
    */
-  private void setupRouteTab(Tab routeTab, VBox fetchBox, Label startLabel, Label endLabel, Label pointLabel,
-  						   Button showButton, Button hideButton, Button resetButton, Button vButton, Button startButton,
-  						   Button destButton, List<RadioButton> searchOptions) {
-
-		/*//set up tab layout
-	    HBox h = new HBox();
-		// v is inner container
-      VBox v = new VBox();
-      h.getChildren().add(v);
-
-
-
-      VBox selectLeft = new VBox();
-
-
-      selectLeft.getChildren().add(startLabel);
-      HBox startBox = new HBox();
-      startBox.getChildren().add(startLabel);
-      startBox.getChildren().add(startButton);
-      startBox.setSpacing(20);
-
-      HBox destinationBox = new HBox();
-      destinationBox.getChildren().add(endLabel);
-      destinationBox.getChildren().add(destButton);
-      destinationBox.setSpacing(20);
-
-
-      VBox markerBox = new VBox();
-      Label markerLabel = new Label("Selected Marker : ");
-
-
-      markerBox.getChildren().add(markerLabel);
-
-      markerBox.getChildren().add(pointLabel);
-
-      VBox.setMargin(markerLabel, new Insets(MARGIN_VAL,MARGIN_VAL,MARGIN_VAL,MARGIN_VAL));
-      VBox.setMargin(pointLabel, new Insets(0,MARGIN_VAL,MARGIN_VAL,MARGIN_VAL));
-      VBox.setMargin(fetchBox, new Insets(0,0,MARGIN_VAL*2,0));
-
-      HBox showHideBox = new HBox();
-      showHideBox.getChildren().add(showButton);
-      showHideBox.getChildren().add(hideButton);
-      showHideBox.setSpacing(2*MARGIN_VAL);
-
-      v.getChildren().add(fetchBox);
-      v.getChildren().add(new Label("Start Position : "));
-      v.getChildren().add(startBox);
-      v.getChildren().add(new Label("Goal : "));
-      v.getChildren().add(destinationBox);
-      v.getChildren().add(showHideBox);
-      for (RadioButton rb : searchOptions) {
-      	v.getChildren().add(rb);
-      }
-      v.getChildren().add(vButton);
-      VBox.setMargin(showHideBox, new Insets(MARGIN_VAL,MARGIN_VAL,MARGIN_VAL,MARGIN_VAL));
-      VBox.setMargin(vButton, new Insets(MARGIN_VAL,MARGIN_VAL,MARGIN_VAL,MARGIN_VAL));
-      vButton.setDisable(true);
-      v.getChildren().add(markerBox);
-      //v.getChildren().add(resetButton);
-
-
-      routeTab.setContent(h);*/
-
-
+  private void setupRouteTab(Tab routeTab,Text pizzaStash,Button nextTurn) {
+	  HBox MainBox = new HBox();
+	  VBox stack = new VBox();
+	  
+	  HBox pizzaBox = new HBox();
+	  File imageFile = new File("data/images/pizza.png");
+	  Image rawPizzaImage = new Image(imageFile.toURI().toString());
+	  ImageView pizzaImage = new ImageView(rawPizzaImage);
+	  pizzaImage.setFitWidth(50);
+	  pizzaImage.setFitHeight(50);
+	  Text PizzaText = new Text(" Pizza Stash ");
+	  PizzaText.setFont(Font.font("Arial",FontWeight.BOLD,20));
+	  pizzaBox.setSpacing(20);
+	  pizzaBox.setPadding(new Insets(20));
+	  pizzaBox.getChildren().addAll(pizzaImage,PizzaText,pizzaStash);
+	  
+	  HBox btnBox = new HBox();
+	  btnBox.setSpacing(20);
+	  btnBox.setPadding(new Insets(20));
+	  btnBox.getChildren().add(nextTurn);
+	  
+	  stack.getChildren().addAll(pizzaBox,btnBox);
+	  MainBox.getChildren().add(stack);
+	  routeTab.setContent(MainBox);
+	  
   }
 
   private void setupJSAlerts(WebView webView) {
@@ -314,24 +220,6 @@ public class MapApp extends Application
     });
   }
 
-	private LinkedList<RadioButton> setupToggle(ToggleGroup group) {
-
-	  // Use Dijkstra as default
-	  RadioButton rbD = new RadioButton("Dijkstra");
-	  rbD.setUserData("Dijkstra");
-	  rbD.setSelected(true);
-
-	  RadioButton rbA = new RadioButton("A*");
-	  rbA.setUserData("A*");
-
-	  RadioButton rbB = new RadioButton("BFS");
-	  rbB.setUserData("BFS");
-
-	  rbB.setToggleGroup(group);
-	  rbD.setToggleGroup(group);
-	  rbA.setToggleGroup(group);
-	  return new LinkedList<RadioButton>(Arrays.asList(rbB, rbD, rbA));
-	}
 
 
 	/*

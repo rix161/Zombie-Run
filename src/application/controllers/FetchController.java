@@ -28,29 +28,12 @@ import javafx.util.Callback;
 import mapmaker.MapMaker;
 
 public class FetchController {
-    private static final int ROW_COUNT = 5;
-    private GeneralService generalService;
-    private RouteService routeService;
-    private Node container;
-    private Button fetchButton;
-    private Button displayButton;
-    private ComboBox<DataSet> dataChoices;
-    // maybe choice map
-    private TextField writeFile;
-    private String filename = "data.map";
-
-    // path for mapfiles to load when program starts
-    private String persistPath = "data/maps/mapfiles.list";
-
-
-    public FetchController(GeneralService generalService, RouteService routeService) {
+	private GeneralService generalService;
+    public FetchController(GeneralService generalService) {
         this.generalService = generalService;
-        this.routeService = routeService;
         setupDisplayButton();
     }
 
-    
-    
     /**
      * Registers event to fetch data
      */
