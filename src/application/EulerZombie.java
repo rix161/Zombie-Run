@@ -22,9 +22,8 @@ public class EulerZombie extends ZombiePawn {
 		
 		Vector<MapNode> neigh = lMap.getNeigbors(this.getCurrentPosition());
 		
-		if( neigh !=null && neigh.size()%2 == 0){
-			Random rand = new Random();
-			MapNode lGP = neigh.get(rand.nextInt(neigh.size()));
+		if( neigh !=null /*&& neigh.size()%2 == 0*/){
+			MapNode lGP = neigh.get(0);
 			this.updatePosition(lGP.getLocation());
 		}
 		

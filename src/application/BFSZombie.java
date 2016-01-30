@@ -24,7 +24,7 @@ public class BFSZombie extends ZombiePawn {
 		if(lList!=null){
 			int steps = getAggressionFactor();
 			if(lList.size() < steps) steps  = lList.size();
-			this.updatePosition(lList.get(steps -1));
+			this.updatePosition(lList.get(steps));
 		}
 		else{
 			Vector<MapNode> neigh = lMap.getNeigbors(this.getCurrentPosition());

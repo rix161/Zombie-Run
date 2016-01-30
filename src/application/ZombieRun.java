@@ -75,6 +75,13 @@ public class ZombieRun extends Application {
 			public void handle(ActionEvent event) {
 				Stage stage = new Stage();
 				
+				HBox lSafeHouseBox = new HBox();
+				ImageView lSafeHouseImage = new ImageView("http://maps.google.com/mapfiles/kml/paddle/red-diamond-lv.png");
+				Text lSafeHouseText = new Text(" This is a safe House");
+				lSafeHouseImage.setFitWidth(100);
+				lSafeHouseImage.setFitHeight(100);
+				lSafeHouseBox.getChildren().addAll(lSafeHouseImage,lSafeHouseText);
+				
 				HBox lPlayerBox = new HBox();
 				File lPlayerFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"player.png");
 				Image lRawPlayerImage = new Image(lPlayerFile.toURI().toString());
@@ -106,7 +113,7 @@ public class ZombieRun extends Application {
 				dZombieBox.getChildren().addAll(dZombieImage,hDijkstraZombie);
 				
 				VBox box = new VBox();
-				box.getChildren().addAll(lPlayerBox,eZombieBox,bZombieBox,dZombieBox);
+				box.getChildren().addAll(lSafeHouseBox,lPlayerBox,eZombieBox,bZombieBox,dZombieBox);
 				Scene hScene = new Scene(box);
 				stage.setScene(hScene);
 				stage.show();
