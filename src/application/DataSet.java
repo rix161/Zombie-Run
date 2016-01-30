@@ -2,7 +2,12 @@ package application;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Random;
 import java.util.Set;
+import java.util.Vector;
+
+import javax.swing.GroupLayout.SequentialGroup;
 
 import geography.GeographicPoint;
 import util.GraphLoader;
@@ -20,12 +25,14 @@ public class DataSet {
 	Set<GeographicPoint> intersections;
     private HashMap<geography.GeographicPoint,HashSet<geography.RoadSegment>>  roads;
 	boolean currentlyDisplayed;
+	private Set<GeographicPoint> safeHouse;
 
 	public DataSet (String path) {
         this.filePath = path;
         graph = null;
         roads = null;
         currentlyDisplayed = false;
+        safeHouse = new HashSet<GeographicPoint>();
 	}
 
     public void setGraph(roadgraph.MapGraph graph) {
@@ -79,5 +86,29 @@ public class DataSet {
     public void setDisplayed(boolean value) {
     	this.currentlyDisplayed = value;
     }
-
+    
+    public void generateSafeHouses(int count){
+    	Vector<GeographicPoint> points = new Vector<>();
+    	Iterator<GeographicPoint> it = this.getIntersections().iterator();
+    	
+    	while(it.hasNext())
+    		points.add(it.next());
+    	
+    	Random randGen = new Random(points.size());
+    	for(int i = 0 ; i < count ; i++){
+    		GeographicPoint sp = points.get(randGen.nextInt(points.size()));
+    		while(safeHouse.contains(sp))
+    			sp = points.get(randGen.nextInt());
+    		safeHouse.add(sp);
+    	}
+    }
+    
+    public Set<GeographicPoint> getSafeHouse(){
+    	return safeHouse;
+    }
+    
+    
+    public boolean checkInSafeHouse(GeographicPoint location){
+    	return safeHouse.contains(location);
+    }
 }

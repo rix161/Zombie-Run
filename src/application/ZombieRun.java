@@ -3,6 +3,8 @@ package application;
 
 
 
+import java.io.File;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,6 +18,8 @@ import javafx.stage.Stage;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -24,7 +28,7 @@ import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 
-public class Main extends Application {
+public class ZombieRun extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		primaryStage.setTitle("Zombie Run");
@@ -70,15 +74,46 @@ public class Main extends Application {
 			@Override
 			public void handle(ActionEvent event) {
 				Stage stage = new Stage();
-				Rectangle2D screen = Screen.getPrimary().getVisualBounds();
-				Text hBFSZombie = new Text("BFS Zombie: Does a BFS traversal to player current location as destination ");
-				Text hDijkstraZombie = new Text("Dijkstra Zombie: Does a Dijkstra traversal to player current location as destination ");
+				
+				HBox lSafeHouseBox = new HBox();
+				ImageView lSafeHouseImage = new ImageView("http://maps.google.com/mapfiles/kml/paddle/red-diamond-lv.png");
+				Text lSafeHouseText = new Text(" This is a safe House");
+				lSafeHouseImage.setFitWidth(100);
+				lSafeHouseImage.setFitHeight(100);
+				lSafeHouseBox.getChildren().addAll(lSafeHouseImage,lSafeHouseText);
+				
+				HBox lPlayerBox = new HBox();
+				File lPlayerFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"player.png");
+				Image lRawPlayerImage = new Image(lPlayerFile.toURI().toString());
+				ImageView lPlayerImage = new ImageView(lRawPlayerImage);
+				Text hPlayer = new Text("Player: Run as you wish!! ");
+				lPlayerBox.getChildren().addAll(lPlayerImage,hPlayer);
+				
+				
+				HBox eZombieBox = new HBox();
+				File eZombieFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"ezombie.png");
+				Image eRawZombieImage = new Image(eZombieFile.toURI().toString());
+				ImageView eZombieImage = new ImageView(eRawZombieImage);
 				Text hEulerZombie = new Text("Euler Zombie: Hangs around nodes with odd degree ");
+				eZombieBox.getChildren().addAll(eZombieImage,hEulerZombie);
+				
+				
+				HBox bZombieBox = new HBox();
+				System.out.println(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"bzombie.png");
+				File bZombieFile = new File("data"+File.separator+"images"+File.separator+"bzombie.png");
+				ImageView bZombieImage = new ImageView(bZombieFile.toURI().toString());
+				Text hBFSZombie = new Text("BFS Zombie: Does a BFS traversal to player current location as destination ");
+				bZombieBox.getChildren().addAll(bZombieImage,hBFSZombie);
+				
+				
+				HBox dZombieBox = new HBox();
+				File dZombieFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"dzombie.png");
+				ImageView dZombieImage = new ImageView(dZombieFile.toURI().toString());
+				Text hDijkstraZombie = new Text("Dijkstra Zombie: Does a Dijkstra traversal to player current location as destination ");
+				dZombieBox.getChildren().addAll(dZombieImage,hDijkstraZombie);
 				
 				VBox box = new VBox();
-				box.getChildren().add(hEulerZombie);
-				box.getChildren().add(hBFSZombie);
-				box.getChildren().add(hDijkstraZombie);
+				box.getChildren().addAll(lSafeHouseBox,lPlayerBox,eZombieBox,bZombieBox,dZombieBox);
 				Scene hScene = new Scene(box);
 				stage.setScene(hScene);
 				stage.show();

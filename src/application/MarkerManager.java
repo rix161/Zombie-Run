@@ -44,6 +44,7 @@ public class MarkerManager {
     private RouteVisualization rv;
     private Button vButton;
     private boolean selectMode = true;
+    
 
     public MarkerManager() {
     	markerMap = new HashMap<geography.GeographicPoint, Marker>();
@@ -82,6 +83,10 @@ public class MarkerManager {
     public void putMarker(geography.GeographicPoint key, Marker value) {
     	markerMap.put(key, value);
 
+    }
+    
+    public void updatePawn(Marker marker){
+    	this.map.addMarker(marker);
     }
 
     /** Used to initialize new RouteVisualization object
@@ -219,6 +224,10 @@ public class MarkerManager {
         	MarkerOptions markerOptions = createDefaultOptions(ll);
             bounds.extend(ll);
         	Marker marker = new Marker(markerOptions);
+        	if(dataSet.checkInSafeHouse(point)){
+        		marker.setIcon(visURL);
+        		marker.setIsSafeHouse();
+        	}
             registerEvents(marker, point);
         	map.addMarker(marker);
         	putMarker(point, marker);
@@ -246,9 +255,13 @@ public class MarkerManager {
             if(selectMode) {
                 	if(selectedMarker != null && selectedMarker != startMarker
                 	   && selectedMarker != destinationMarker) {
-                		selectedMarker.setIcon(markerURL);
+                		if(!selectedMarker.getIsSafeHouse())
+                			selectedMarker.setIcon(markerURL);
+                		else
+                			selectedMarker.setIcon(visURL);
 //                		selectedMarker.setZIndex(DEFAULT_Z);
                 	}
+          
             	selectManager.setPoint(point, marker);
                 selectedMarker = marker;
                 selectedMarker.setIcon(SELECTED_URL);
@@ -256,7 +269,7 @@ public class MarkerManager {
 
                 // re add markers to map
                 // slightly glitchy
-//                refreshMarkers();
+                refreshMarkers();
             }
         });
     }
@@ -272,4 +285,11 @@ public class MarkerManager {
 
 
     public DataSet getDataSet() { return this.dataSet; }
+    public void setSelectMarketVisibility(boolean show){ 
+    	if(selectedMarker.getIsSafeHouse())
+    		selectedMarker.setIcon(visURL);
+    	else
+    		selectedMarker.setIcon(markerURL);
+  
+    }
 }
