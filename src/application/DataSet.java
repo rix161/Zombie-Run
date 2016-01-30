@@ -7,6 +7,8 @@ import java.util.Random;
 import java.util.Set;
 import java.util.Vector;
 
+import javax.swing.GroupLayout.SequentialGroup;
+
 import geography.GeographicPoint;
 import util.GraphLoader;
 
@@ -87,22 +89,22 @@ public class DataSet {
     
     public void generateSafeHouses(int count){
     	Vector<GeographicPoint> points = new Vector<>();
-    	//Iterator<GeographicPoint> it = this.getIntersections().iterator();
+    	Iterator<GeographicPoint> it = this.getIntersections().iterator();
     	
-    	/*while(it.hasNext())
+    	while(it.hasNext())
     		points.add(it.next());
     	
     	Random randGen = new Random(points.size());
     	for(int i = 0 ; i < count ; i++){
-    		GeographicPoint sp = points.get(randGen.nextInt());
+    		GeographicPoint sp = points.get(randGen.nextInt(points.size()));
     		while(safeHouse.contains(sp))
     			sp = points.get(randGen.nextInt());
     		safeHouse.add(sp);
-    	}*/
+    	}
     }
     
-    public void setSafeHouse(Set<GeographicPoint> safeHouse){
-    	this.safeHouse = safeHouse;
+    public Set<GeographicPoint> getSafeHouse(){
+    	return safeHouse;
     }
     
     

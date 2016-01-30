@@ -14,7 +14,7 @@ import geography.GeographicPoint;
  * Class representing a vertex (or node) in our MapGraph
  *
  */
-// WEEK 3 SOLUTIONS implements Comparable
+public // WEEK 3 SOLUTIONS implements Comparable
 class MapNode implements Comparable
 {
 	/** The list of edges out of this node */
@@ -57,7 +57,7 @@ class MapNode implements Comparable
 	}
 	
 	/** get the location of a node */
-	GeographicPoint getLocation()
+	public GeographicPoint getLocation()
 	{
 		return location;
 	}

@@ -28,7 +28,7 @@ public class Marker extends JavascriptObject {
 
     protected String title;
     protected MarkerOptions markerOptions;
-
+    private boolean isSafeHouse = false;
 
     /**
      * Contructs a new map Marker with the specified options
@@ -38,7 +38,14 @@ public class Marker extends JavascriptObject {
         super(GMapObjectType.MARKER, markerOptions);
         this.markerOptions = markerOptions;
     }
+    
+    public void setIsSafeHouse(){
+    	isSafeHouse = true;
+	}
 
+    public boolean getIsSafeHouse(){
+    	return isSafeHouse;
+	}
 
     /**
      * Sets the title of this Marker

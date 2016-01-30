@@ -76,7 +76,7 @@ public class ZombieRun extends Application {
 				Stage stage = new Stage();
 				
 				HBox lPlayerBox = new HBox();
-				File lPlayerFile = new File("data"+File.separator+"images"+File.separator+"player.png");
+				File lPlayerFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"player.png");
 				Image lRawPlayerImage = new Image(lPlayerFile.toURI().toString());
 				ImageView lPlayerImage = new ImageView(lRawPlayerImage);
 				Text hPlayer = new Text("Player: Run as you wish!! ");
@@ -84,7 +84,7 @@ public class ZombieRun extends Application {
 				
 				
 				HBox eZombieBox = new HBox();
-				File eZombieFile = new File("data"+File.separator+"images"+File.separator+"ezombie.png");
+				File eZombieFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"ezombie.png");
 				Image eRawZombieImage = new Image(eZombieFile.toURI().toString());
 				ImageView eZombieImage = new ImageView(eRawZombieImage);
 				Text hEulerZombie = new Text("Euler Zombie: Hangs around nodes with odd degree ");
@@ -92,7 +92,7 @@ public class ZombieRun extends Application {
 				
 				
 				HBox bZombieBox = new HBox();
-				System.out.println("data"+File.separator+"images"+File.separator+"bzombie.png");
+				System.out.println(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"bzombie.png");
 				File bZombieFile = new File("data"+File.separator+"images"+File.separator+"bzombie.png");
 				ImageView bZombieImage = new ImageView(bZombieFile.toURI().toString());
 				Text hBFSZombie = new Text("BFS Zombie: Does a BFS traversal to player current location as destination ");
@@ -100,7 +100,7 @@ public class ZombieRun extends Application {
 				
 				
 				HBox dZombieBox = new HBox();
-				File dZombieFile = new File("data"+File.separator+"images"+File.separator+"dzombie.png");
+				File dZombieFile = new File(System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+"dzombie.png");
 				ImageView dZombieImage = new ImageView(dZombieFile.toURI().toString());
 				Text hDijkstraZombie = new Text("Dijkstra Zombie: Does a Dijkstra traversal to player current location as destination ");
 				dZombieBox.getChildren().addAll(dZombieImage,hDijkstraZombie);

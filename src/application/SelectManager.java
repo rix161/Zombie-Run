@@ -63,6 +63,7 @@ public class SelectManager {
     	}
     }
 
+    
     public void setPointLabel(CLabel<GeographicPoint> label) { this.pointLabel = label; }
     public void setStartLabel(CLabel<GeographicPoint> label) { this.startLabel = label; }
     public void setDestinationLabel(CLabel<GeographicPoint> label) { this.destinationLabel = label; }

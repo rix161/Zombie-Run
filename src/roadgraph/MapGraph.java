@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 import java.util.Set;
+import java.util.Vector;
 import java.util.function.Consumer;
 
 import geography.GeographicPoint;
@@ -193,6 +194,27 @@ public class MapGraph {
 	public Collection<GeographicPoint> getVertices() {
 		return pointNodeMap.keySet();
 	}
+	
+	public Vector<MapNode> getNeigbors(GeographicPoint lGP){
+		MapNode lMP = pointNodeMap.get(lGP);
+		Vector<MapNode> temp = new Vector<MapNode>();
+		if(lMP==null)
+			return null;
+		else{
+			Iterator<MapNode> it = lMP.getNeighbors().iterator();
+			while(it.hasNext()){
+				temp.add(it.next());
+			}
+			return temp;
+		}
+	}
+	
+	public void resetPointMap(){
+		for(MapNode mn:pointNodeMap.values()){
+			mn.setDistance(Double.MAX_VALUE);
+			mn.setActualDistance(Double.MAX_VALUE);
+		}
+	}
 
 	// get a set of neighbor nodes from a mapnode
 	private Set<MapNode> getNeighbors(MapNode node) {
@@ -252,15 +274,19 @@ public class MapGraph {
 				}
 			}
 		}
+		visited.clear();
+		toExplore.clear();
+		
 		if (!next.equals(endNode)) {
 			System.out.println("No path found from " +start+ " to " + goal);
+			parentMap.clear();
 			return null;
 		}
 		
 		// Reconstruct the parent path
 		List<GeographicPoint> path =
 				reconstructPath(parentMap, startNode, endNode);
-
+		parentMap.clear();
 		return path;
 	}
 

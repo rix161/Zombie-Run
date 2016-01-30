@@ -9,6 +9,7 @@ import gmapsfx.javascript.object.MarkerOptions;
 
 public class Pawn {
 	private Marker lMarker;
+	GeographicPoint lCurrPosition;
 	
 	public Pawn(String iconPath) {
 		iconPath = System.getProperty("user.dir")+File.separator+"data"+File.separator+"images"+File.separator+iconPath;
@@ -18,14 +19,12 @@ public class Pawn {
 	
 	public void updatePosition(GeographicPoint lPos){
 		LatLong lLatLong = new LatLong(lPos.getX(),lPos.getY());
+		lCurrPosition = lPos;
 		lMarker.setPosition(lLatLong);
 	}
 	
 	public GeographicPoint getCurrentPosition(){
-		MarkerOptions lMO = lMarker.getMarkerOptions();
-		LatLong lLatLong =  lMO.getPosition();
-		GeographicPoint lGP = new GeographicPoint(lLatLong.getLatitude(), lLatLong.getLongitude());
-		return lGP;
+		return lCurrPosition;
 	}
 
 	public Marker getMarker(){
